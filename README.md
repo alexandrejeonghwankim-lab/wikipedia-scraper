@@ -1,17 +1,16 @@
 # wikipedia-scraper
-Project wikipedia-scraper by Alex Kim and Sooyoung Lee 
+Project wikipedia-scraper by [Alex Kim](https://github.com/alexandrejeonghwankim-lab) and [Sooyoung Lee](https://github.com/patoobyte)
 
-🧰 Built with  
+🧰 Built with 🧰  
 <img src="https://www.python.org/static/community_logos/python-logo.png" alt="Python logo" style="width:20%; height:auto;">
 
 ---
 
 ## ✨ Description ✨
 
-A that builds a JSON file with the political leaders of each country you get from the following API: 
-https://country-leaders.onrender.com/docs.
+A program that builds a JSON file with the political leaders of each country you get from an [API](https://country-leaders.onrender.com/docs):  
 
-The file includes, for each leader:
+The file includes, for each leader:  
 	- Full name  
 	- Date of birth  
 	- Date of death (if applicable)  
@@ -28,7 +27,7 @@ The file includes, for each leader:
 ├── requirements.txt
 ├── main.py
 ├── dev/
-│   ├── Alex_sandbox.ipynb
+│   ├── Alex_sandbox_notebook.ipynb
 │   └── sooyoung_sandbox.ipynb
 └── src/
     ├── __init__.py
