@@ -12,38 +12,54 @@
 
 import requests
 from bs4 import BeautifulSoup
+import re
+import json
 
 class WikipediaScraper:
 	"""
 	Class responsible for downloading and parsing HTML documents.
 
 	Attributes:
-		session: (???) passed down from the parent application context.
+		session: (requests.Session) passed down from the parent application context.
 	"""
 
-	def __init__(self, session) -> None:
-		self.session = session
+	def __init__(self, session: requests.Session) -> None:
+		"""
+		Constructor for a WikipediaScraper.
 
-	def fetch_html(self, url):
+		Params:
+			self: (requests.Session) Number of tables in the openspace.
+		Return: 
+			None.
+		"""
+		self.session = session
+		self.leaders = {}
+
+	def fetch_html(self, url: str) -> str:
 		"""
 		This function requests raw HTML text from the given URL.
 
 		Params:
-			url: (str) Wikipedia page URL.
+			url: (str) The Wikipedia page URL.
 		Return:
-			None.
+			req.text: (str) The raw HTML text.
 		"""
 
 		try:
 			req = self.session.get(url, headers={"User-Agent": "Mozilla/5.0"})
 			req.raise_for_status()
+			return req.text
 		except requests.exceptions.ConnectionError as error:
 			print("Connection error occurred:", error)
 		except requests.exceptions.HTTPError as error:
 			print("HTTP error occurred:", error)
+		except requests.exceptions.Timeout as error:
+			print("Timeout Error")
+		except requests.exceptions.RequestException as error:
+			print("Request error")
+		return None
 
-
-	def get_first_paragraph(html):
+	def get_first_paragraph(self, html: str) -> str:
 		"""
 		This function parses the raw HTML and returns the first paragraph.
 
@@ -52,16 +68,35 @@ class WikipediaScraper:
 		Return:
 			first_paragraph: (str) Extracted first paragraph.
 		"""
-		soup = BeautifulSoup(req.text, "html.parser")
+		if html is None:
+			return None
+		soup = BeautifulSoup(html, "html.parser")
 		paragraphs = soup.find_all("p")
-		first_paragraph = {}
+		first_paragraph = ""
 		for paragraph in paragraphs:
 			if paragraph.find("b"):
 				first_paragraph = paragraph.get_text()
 				break
+		return first_paragraph
 
-	def clean_text(text):
-		pass
+	def clean_text(self, text: str) -> str:
+		"""
+		This function strips the first paragraph from unwanted elements,
+		such as extra whitespaces and unwanted characters. 
 
-	def to_json_file(filepath):
-		pass
+		Params:
+			text: (str) The extracted first paragraph.
+		Return:
+			text: (str) The cleaned first paragraph.
+		"""
+		while re.search(r"\[[^\[\]]*\]", text): # Removes everything in [], including nested
+			text = re.sub(r"\[[^\[\]]*\]", "", text)
+		text = re.sub(r"\s+", " ", text) # Reduces multiple white spaces to single space
+		text  = re.sub(r"ⓘ", "", text) # Removes ⓘ
+		text  = re.sub(r"\bÉcouter\b\s*", "", text) # Removes "Écouter" in the French page
+		text  = re.sub(r"\(\s*French:\s*; ", "(", text) # Removes "French: ;" in the English page
+		return text 
+
+	def to_json_file(self, filepath: str) -> None:
+		with open(filepath, "w", encoding="UTF-8") as file:
+			json.dump(self.leaders, file, ensure_ascii=False, indent=4)
