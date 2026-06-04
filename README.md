@@ -28,7 +28,7 @@ The file includes, for each leader:
 ├── requirements.txt
 ├── main.py
 ├── dev/
-│   ├── student_a_sandbox.ipynb
+│   ├── Alex_sandbox.ipynb
 │   └── sooyoung_sandbox.ipynb
 └── src/
     ├── __init__.py
