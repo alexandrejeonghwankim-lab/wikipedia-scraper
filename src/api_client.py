@@ -7,22 +7,35 @@
 # get_countries(): Queries the API and returns a clean list of supported country codes.
 # get_leaders(country: str): Fetches and returns the raw JSON list of leaders for a targeted country.
 
-class CountyLeadersAPI:
+import requests
+
+class CountryLeadersAPI:
     """Class responsible only for communicating with the REST API"""
-    def __init__(self, 
-                 base_url = "https://country-leaders.onrender.com", 
-                 country_endpoint, 
-                 leaders_endpoint, 
-                 cookies_endpoint, 
-                 session):
-        self.base_url = base_url
-        self.country_endpoint = 
+    def __init__(self):
+        
+        self.base_url = "https://country-leaders.onrender.com"
+        self.country_endpoint = "/countries"
+        self.leaders_endpoint = "/leaders"
+        self.cookies_endpoint = "/cookie"
+        self.session = requests.Session()
     
-    def refresh_cookie():
-        pass
+    def refresh_cookie(self):
+        response = self.session.get(self.base_url + self.cookies_endpoint)
+        return response.cookies
 
-    def get_countries():
-        pass
 
-    def get_leaders(country: str):
-        pass
+    def get_countries(self):
+        url = self.base_url + self.country_endpoint
+        cookies = self.refresh_cookie()
+        response = self.session.get(url, cookies = cookies)
+        countries = response.json()
+        return countries
+
+        
+
+    def get_leaders(self,country: str):
+        url = self.base_url + self.leaders_endpoint + "?country=" + country
+        cookies = self.refresh_cookie()
+        response = self.session.get(url, cookies = cookies)
+        leaders = response.json()
+        return leaders 
