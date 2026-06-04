@@ -8,7 +8,16 @@ Project wikipedia-scraper by Alex Kim and Sooyoung Lee
 
 ## ✨ Description ✨
 
-(add description)
+A that builds a JSON file with the political leaders of each country you get from the following API: 
+https://country-leaders.onrender.com/docs.
+
+The file includes, for each leader:
+	- Full name
+	- Date of birth
+	- Date of death (if applicable)
+	- Mandate period
+	- Wikipedia page URL
+	- First paragraph of their Wikipedia page
 
 ## 🗃️ Structure 🗃️
 
@@ -20,7 +29,7 @@ Project wikipedia-scraper by Alex Kim and Sooyoung Lee
 ├── main.py
 ├── dev/
 │   ├── student_a_sandbox.ipynb
-│   └── student_b_sandbox.ipynb
+│   └── sooyoung_sandbox.ipynb
 └── src/
     ├── __init__.py
     ├── api_client.py
