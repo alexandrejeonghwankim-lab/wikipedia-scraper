@@ -34,7 +34,7 @@ class CountryLeadersAPI:
         
 
     def get_leaders(self,country: str):
-        url = self.base_url + self.leaders_endpoint + "?country=" + country
+        url = self.base_url + self.leaders_endpoint + "?country=" + str(country)
         cookies = self.refresh_cookie()
         response = self.session.get(url, cookies = cookies)
         leaders = response.json()

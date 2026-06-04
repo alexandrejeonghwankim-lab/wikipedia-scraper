@@ -89,12 +89,20 @@ class WikipediaScraper:
 		Return:
 			text: (str) The cleaned first paragraph.
 		"""
-		while re.search(r"\[[^\[\]]*\]", text): # Removes everything in [], including nested
-			text = re.sub(r"\[[^\[\]]*\]", "", text)
-		text = re.sub(r"\s+", " ", text) # Reduces multiple white spaces to single space
-		text  = re.sub(r"ⓘ", "", text) # Removes ⓘ
-		text  = re.sub(r"\bÉcouter\b\s*", "", text) # Removes "Écouter" in the French page
-		text  = re.sub(r"\(\s*French:\s*; ", "(", text) # Removes "French: ;" in the English page
+		#while re.search(r"\[[^\[\]]*\]", text): # Removes everything in [], including nested
+			#text = re.sub(r"\[[^\[\]]*\]", "", text)
+		#text = re.sub(r"\s+", " ", text) # Reduces multiple white spaces to single space
+		#text  = re.sub(r"ⓘ", "", text) # Removes ⓘ
+		#text  = re.sub(r"\bÉcouter\b\s*", "", text) # Removes "Écouter" in the French page
+		#text  = re.sub(r"\(\s*French:\s*; ", "(", text) # Removes "French: ;" in the English page
+
+		text = re.sub(r"\(.*?\)", "", text)
+		text = re.sub(r"\[.*?\]", "", text)
+		text = re.sub(" +", " ", text)
+		text = re.sub(" +", " ", text)
+		text = re.sub(r"ⓘ", "", text)
+		text = re.sub(r"Écouter", "", text)
+		text = re.sub(r"\s{2,}", " ", text)
 		return text 
 
 	def to_json_file(self, filepath: str) -> None:

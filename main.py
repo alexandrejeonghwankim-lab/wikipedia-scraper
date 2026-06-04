@@ -3,7 +3,9 @@ from src.html_scraper import WikipediaScraper
 import requests
 
 # API Setup
+api = CountryLeadersAPI()
 # Build countries
+countries = api.get_countries()
 
 # WikipediaScraper Setup
 wiki_session = requests.Session() # Launches session
@@ -13,10 +15,10 @@ leaders_per_country = {} # Placeholder for final structure
 
 # Scraping
 for country in countries:
-	leaders = [] # Placeholder for leaders list (get from get_leaders)
+	leaders = api.get_leaders(country) # Placeholder for leaders list (get from get_leaders)
 	leaders_per_country[country] = leaders
 	for leader in leaders:
-		wiki_url = "" # build url - API part? 
+		wiki_url = leader["wikipedia_url"] # build url - API part? 
 		html = scraper.fetch_html(wiki_url)
 		first_paragraph = scraper.get_first_paragraph(html)
 		clean_paragraph = scraper.clean_text(first_paragraph)
