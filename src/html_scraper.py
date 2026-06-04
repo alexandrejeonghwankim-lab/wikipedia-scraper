@@ -20,7 +20,8 @@ class WikipediaScraper:
 	Class responsible for downloading and parsing HTML documents.
 
 	Attributes:
-		session: (requests.Session) passed down from the parent application context.
+		session: (requests.Session) Passed down from the parent application context.
+		leaders: (dict) Contains leaders grouped by country.
 	"""
 
 	def __init__(self, session: requests.Session) -> None:
@@ -28,27 +29,30 @@ class WikipediaScraper:
 		Constructor for a WikipediaScraper.
 
 		Params:
-			self: (requests.Session) Number of tables in the openspace.
+			session: (requests.Session) Passed down from the parent application context.
 		Return: 
 			None.
 		"""
 		self.session = session
 		self.leaders = {}
 
-	def fetch_html(self, url: str) -> str:
+	def fetch_html(self, url: str) -> str | None:
 		"""
 		This function requests raw HTML text from the given URL.
+		In case of error, it will catch the corresponding exception,
+		and prints an error message.
 
 		Params:
 			url: (str) The Wikipedia page URL.
 		Return:
-			req.text: (str) The raw HTML text.
+			req.text: (str) The raw HTML text if request is successful.
+			None: If request is unsuccessful.
 		"""
 
 		try:
 			req = self.session.get(url, headers={"User-Agent": "Mozilla/5.0"})
 			req.raise_for_status()
-			return req.text
+			return req.text # Return when request is successful
 		except requests.exceptions.ConnectionError as error:
 			print("Connection error occurred:", error)
 		except requests.exceptions.HTTPError as error:
@@ -57,9 +61,9 @@ class WikipediaScraper:
 			print("Timeout Error")
 		except requests.exceptions.RequestException as error:
 			print("Request error")
-		return None
+		return None # Return when error
 
-	def get_first_paragraph(self, html: str) -> str:
+	def get_first_paragraph(self, html: str) -> str | None:
 		"""
 		This function parses the raw HTML and returns the first paragraph.
 
@@ -68,18 +72,18 @@ class WikipediaScraper:
 		Return:
 			first_paragraph: (str) Extracted first paragraph.
 		"""
-		if html is None:
+		if html is None: # If html is empty, return None
 			return None
 		soup = BeautifulSoup(html, "html.parser")
-		paragraphs = soup.find_all("p")
+		paragraphs = soup.find_all("p") # Find all paragraphs
 		first_paragraph = ""
-		for paragraph in paragraphs:
+		for paragraph in paragraphs: # Look for the first paragraph with a bolded element
 			if paragraph.find("b"):
 				first_paragraph = paragraph.get_text()
 				break
 		return first_paragraph
 
-	def clean_text(self, text: str) -> str:
+	def clean_text(self, text: str) -> str | None:
 		"""
 		This function strips the first paragraph from unwanted elements,
 		such as extra whitespaces and unwanted characters. 
@@ -88,14 +92,11 @@ class WikipediaScraper:
 			text: (str) The extracted first paragraph.
 		Return:
 			text: (str) The cleaned first paragraph.
+			None: If text was empty.
 		"""
-		#while re.search(r"\[[^\[\]]*\]", text): # Removes everything in [], including nested
-			#text = re.sub(r"\[[^\[\]]*\]", "", text)
-		#text = re.sub(r"\s+", " ", text) # Reduces multiple white spaces to single space
-		#text  = re.sub(r"ⓘ", "", text) # Removes ⓘ
-		#text  = re.sub(r"\bÉcouter\b\s*", "", text) # Removes "Écouter" in the French page
-		#text  = re.sub(r"\(\s*French:\s*; ", "(", text) # Removes "French: ;" in the English page
 
+		if text is None: # If there is no text, return None
+			return None
 		text = re.sub(r"\(.*?\)", "", text)
 		text = re.sub(r"\[.*?\]", "", text)
 		text = re.sub(" +", " ", text)
@@ -106,5 +107,13 @@ class WikipediaScraper:
 		return text 
 
 	def to_json_file(self, filepath: str) -> None:
+		"""
+		This function prints the scraping result into a .json file. 
+
+		Params:
+			filepath: (str) The .json filename.
+		Return:
+			None.
+		"""
 		with open(filepath, "w", encoding="UTF-8") as file:
 			json.dump(self.leaders, file, ensure_ascii=False, indent=4)

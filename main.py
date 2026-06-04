@@ -8,17 +8,19 @@ api = CountryLeadersAPI()
 countries = api.get_countries()
 
 # WikipediaScraper Setup
-wiki_session = requests.Session() # Launches session
+wiki_session = requests.Session() # Launches session.
 wiki_session.headers.update({"User-Agent": "Mozilla/5.0"})
 scraper = WikipediaScraper(wiki_session)
-leaders_per_country = {} # Placeholder for final structure
+leaders_per_country = {} # Placeholder for final structure.
 
 # Scraping
+# For each country, get its leaders.
 for country in countries:
-	leaders = api.get_leaders(country) # Placeholder for leaders list (get from get_leaders)
+	leaders = api.get_leaders(country)
 	leaders_per_country[country] = leaders
+# For each leader, get the wikipedia url, extracts and cleans the first paragraph of the page.
 	for leader in leaders:
-		wiki_url = leader["wikipedia_url"] # build url - API part? 
+		wiki_url = leader["wikipedia_url"]
 		html = scraper.fetch_html(wiki_url)
 		first_paragraph = scraper.get_first_paragraph(html)
 		clean_paragraph = scraper.clean_text(first_paragraph)
