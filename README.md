@@ -37,11 +37,11 @@ The file includes, for each leader:
 
 ## 💻 Installation & Usage 🔨
 
-(add installation steps)
-
 1. Clone the repository to your local machine.
 
-2. Run the script with  
+2. Check and intall the required packages (_requirements.txt_)
+
+3. Run the script with  
 ```
 python main.py
 ```
@@ -50,7 +50,7 @@ or
 python3 main.py
 ```
 
-3. The script:  
+4. The script:  
 	- Connects to the Country Leaders API
 	- Requests a valid API cookie
 	- Retrieves the list of supported countries
@@ -69,4 +69,4 @@ The project was completed over 3 days.
 
 ## 🐈‍⬛ Personal Situation 🐈‍⬛
 
-The project was done as part of the AI & Data Science bootcamp at BeCode.org.
+The project was done as part of the AI & Data Science bootcamp at [BeCode](https://becode.org)
