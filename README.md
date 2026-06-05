@@ -51,8 +51,17 @@ python3 main.py
 ```
 
 3. The script:  
-	- (insert steps)
-
+	- Connects to the Country Leaders API
+	- Requests a valid API cookie
+	- Retrieves the list of supported countries
+	- Retrieves the leaders for each country
+		- If the cookie expires, the script requests a new one
+	- Visits each leader's Wikipedia page
+	- Extracts the first biographical paragraph
+	- Cleans the extracted text
+		- Removes citation brackets and extra whitespace
+	- Adds the cleaned paragraph to each leader's data
+	- Stores the final result in a `.json` file
 
 ## 🏃 Timeline 🏃
 
